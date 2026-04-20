@@ -109,6 +109,12 @@ class LinkedList
         return slow;
     }
 
+    // sroting the linked list
+    void srtList()
+    {
+        
+    }
+
     bool isPalindrome()
     {
         /*
