@@ -1,69 +1,133 @@
+#pragma once
 #include <iostream>
 #include "Node.h"
 using namespace std;
+
 class LinkedList
 {
-    private:
-        Node* head;
-        Node* tail;
-    public:
-        LinkedList(){ head = nullptr; tail= nullptr; }
-    void insertAtEnd(int val)
-    {
-        Node* tempNode = new Node(val);
-        // if ll is empty
-        if(head == nullptr)
-        {
-            head = tempNode;
-            tail = tempNode;
-            return;
-        }
-        else
-        {
-            // inserting at tail
-            tail->next = tempNode;
-            tempNode->prev = tail;
-            tail = tempNode;
-        }
-    }
+private:
+	Node* head;
+	Node* tail;
+public:
+	LinkedList() { 
+		head = nullptr;
+		tail = nullptr;
+	}
 
-    void insertAtHead(int val)
-    {
-        Node* tempNode = new Node(val);
-        if(head == nullptr)
-        {
-                head = tempNode;
-                tail = tempNode;
-        }
-        else 
-        {
-            tempNode->next = head;
-            head->prev = tempNode;
-            head = tempNode;
-        }
-    }
+	// inserting at Head
+	void insertAtHead(int val)
+	{
+		Node* tempNode = new Node(val);
+		if (head == nullptr)
+		{
+			head = tempNode;
+			tail = tempNode;
+			return;
+		}
+		else
+		{
+			tempNode->next = head;
+			head->prev = tempNode;
+			head = tempNode;
+		}
+	}
 
-    void insertAtSpecific(int k, int val)
-    {
-        int position = k;
-        if(head == nullptr)
-        {
-            insertAtHead(val);
-        }
-        else
-        {
-            Node* tempHead = head;
-            while(tempHead->next != nullptr && k != 0)
-            {
-                tempHead = tempHead->next;
-            }
+	// node count
+	int nodeCount()
+	{
+		int size = 0;
+		if (head == nullptr) return 0;
 
-            Node* tempNode = new Node(val);
-            tempNode->next = tempHead;
-            tempNode->prev = tempHead->prev;
-            tempHead->prev->next = tempNode;
-            tempHead->prev = tempNode;
-        } 
-    }
+		else
+		{
+			Node* tempHead = head;
+			Node* tempTail = tail;
+			while (tempHead != tempTail && tempHead->next != tempTail)
+			{
+				tempHead = tempHead->next;
+				tempTail = tempTail->prev;
+				size++;
+			}
 
+			if (tempHead == tempTail)
+			{
+				size = 2 * (size + 1);
+			}
+			else
+			{
+				size = (2 * size) + 1;
+			}
+		}
+		return size;
+		
+	}
+
+	// insert at tail
+	void insertAtTail(int val)
+	{
+		Node* tempNode = new Node(val);
+		if (head == nullptr)
+		{
+			insertAtHead(val);
+		}
+		else
+		{
+			tempNode->prev = tail;
+			tail->next = tempNode;
+			tail = tempNode;
+		}
+	}
+
+	void insertAtSpecific(int k, int val)
+	{
+		Node* tempHead = head;
+
+		if (head == nullptr)
+		{
+			insertAtHead(val);
+		}
+		else
+		{
+			int size = nodeCount();
+			if (size <= k)
+			{
+				insertAtTail(val);
+			}
+			else
+			{
+				for (int i = 0; i < k - 1; i++)
+				{
+					tempHead = tempHead->next;
+				}
+				// now i have to add betwween tempHead and tempHead->next
+				Node* tempNode = new Node(val);
+				tempNode->next = tempHead->next;
+				tempNode->prev = tempHead;
+				tempHead->next = tempNode;
+				tempHead->next->prev = tempNode;
+			}
+
+		}
+	}
+
+	// display from head
+	void displayFromHead()
+	{
+		Node* tempHead = head;
+		while (tempHead != nullptr)
+		{
+			cout << tempHead->data << " ";
+			tempHead = tempHead->next;
+		}
+	}
+
+	void displayFromTail()
+	{ 
+		Node* tempTail = tail;
+		while (tempTail != nullptr)
+		{
+			cout << tempTail->data << " ";
+			tempTail = tempTail->prev;
+		}
+	}
 };
